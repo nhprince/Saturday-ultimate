@@ -333,7 +333,7 @@ export function App() {
     let accumulatedReasoning = '';
     let responseModel = selectedModelId;
     let responseProvider = 'saturday';
-    let decision = undefined;
+    let decision: any = undefined;
 
     await api.streamChat(
       streamPayload,

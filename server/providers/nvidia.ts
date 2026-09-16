@@ -158,7 +158,7 @@ export class NvidiaNimProvider implements AIProvider {
           id,
           provider: this.id,
           providerName: this.name,
-          displayName: id.split('/').pop()?.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) || id,
+          displayName: id.split('/').pop()?.replace(/-/g, ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()) || id,
           contextWindow: 128000,
           capabilities: {
             text: true,

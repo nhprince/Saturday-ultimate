@@ -52,8 +52,8 @@ export interface ChatMessageAttachment {
   name: string;
   size: number;
   type: string;
-  dataUrl?: string; // image preview or text snippet
-  content?: string; // parsed text
+  dataUrl?: string;
+  content?: string;
 }
 
 export interface ChatMessage {
@@ -69,10 +69,9 @@ export interface ChatMessage {
     provider: string;
     reason: string;
     latencyMs?: number;
-  fallbackOccurred?: boolean;
-  confidenceScore?: number;
-  taskClassification?: string;
-  triedModels?: string[];
+    fallbackOccurred?: boolean;
+    confidenceScore?: number;
+    taskClassification?: string;
   };
   attachments?: ChatMessageAttachment[];
   reasoningContent?: string;
@@ -89,8 +88,6 @@ export interface AIRequest {
   temperature?: number;
   maxTokens?: number;
   stream?: boolean;
-  tools?: string[];
-  systemPrompt?: string;
 }
 
 export interface AIResponse {
@@ -99,11 +96,6 @@ export interface AIResponse {
   reasoningContent?: string;
   model: string;
   provider: string;
-  usage?: {
-    promptTokens: number;
-    completionTokens: number;
-    totalTokens: number;
-  };
   latencyMs: number;
 }
 
@@ -118,13 +110,51 @@ export interface AIStreamChunk {
   error?: string;
 }
 
-export interface AIProvider {
+export interface Conversation {
   id: string;
-  name: string;
-  description: string;
-  isConfigured(): boolean;
-  listModels(): Promise<AIModel[]>;
-  healthCheck(model: AIModel): Promise<ModelHealth>;
-  generate(request: AIRequest): Promise<AIResponse>;
-  stream(request: AIRequest): AsyncIterable<AIStreamChunk>;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+  pinned: boolean;
+  archived: boolean;
+  modelUsed?: string;
+  messages: ChatMessage[];
+}
+
+export interface AdminCMSConfig {
+  welcomeHeadline: string;
+  welcomeSubheadline: string;
+  promptSuggestions: Array<{
+    id: string;
+    title: string;
+    prompt: string;
+    category: 'writing' | 'coding' | 'reasoning' | 'productivity';
+  }>;
+  announcements: Array<{
+    id: string;
+    text: string;
+    active: boolean;
+    type: 'info' | 'update' | 'alert';
+  }>;
+  featureFlags: {
+    voiceMode: boolean;
+    fileAttachments: boolean;
+    latexRendering: boolean;
+    codeExecutionPreview: boolean;
+    smartRouting: boolean;
+  };
+}
+
+export interface RouterConfig {
+  defaultRouter: 'smart' | 'free' | 'direct';
+  smartRoutingEnabled: boolean;
+  enableFallback: boolean;
+  maxFallbacks: number;
+  priorityWeights: {
+    latency: number;
+    health: number;
+    capabilities: number;
+    providerPreference: number;
+  };
+  preferredProviders: string[];
 }
